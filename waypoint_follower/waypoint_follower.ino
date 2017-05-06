@@ -230,7 +230,7 @@ void setup()
     #endif
     accelgyro.setSleepEnabled(false);
     accelgyro.initialize();
-   // accelgyro.testConnection() ? connection=1 : connection=0 ; 
+    accelgyro.testConnection() ? connection=1 : connection=0 ; 
     //calculating offsets
     for(i=0;i<3;i++)
     {
