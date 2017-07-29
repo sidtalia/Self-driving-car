@@ -11,16 +11,16 @@ inline void  updateOpticalFlow(void)
     dx = buf[1];   //caliberation for conversion to meters.   
     dy = buf[2];
     surfaceQuality = buf[3];
-    accelRequired=0;
-    if(surfaceQuality<=20)
+    accelRequired= false;
+    if(surfaceQuality<20)
     {
-      surfaceQuality=1;
-      accelRequired=1;
+      surfaceQuality = 1;
+      accelRequired  = true ; //use accelerometer 
     }
   }
   else if(motion & 0x10)  //buffer overflow
   {
-    accelRequired=1;
+    accelRequired = true ;
   }
 }
 
