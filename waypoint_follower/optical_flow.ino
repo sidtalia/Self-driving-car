@@ -8,7 +8,7 @@ inline void  updateOpticalFlow(void)
   //Serial.print(motion & 0x01); // Resolution
   if (motion & 0x01) 
   {  
-    dx = buf[1];   //caliberation for conversion to meters.   
+    dx = buf[1];      
     dy = buf[2];
     surfaceQuality = buf[3];
     accelRequired= false;
@@ -24,7 +24,7 @@ inline void  updateOpticalFlow(void)
   }
 }
 
-inline void reset(void)              //reset. used almost never
+inline void reset(void)              //reset. used almost never after the setup.
 {
   digitalWrite(RESET_PIN, HIGH); // Set high
   delayMicroseconds(10);
