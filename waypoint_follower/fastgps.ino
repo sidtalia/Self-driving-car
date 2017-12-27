@@ -1,3 +1,14 @@
+/*
+ * I call this tab the "fast_GPS" because it's faster than using the "tinyGPS" library.
+ * I m using UBX-POSLLH protocol which, as the name suggests, gives me the POSition in Longitude,Latitude and Height
+ * as well as some other useful data. The reason for using this is that it contains the bare minimum information 
+ * the bot would need, therefore reducing the time required to transfer the data to ~5ms down from approximately 20ms 
+ * when using the standard protocols (forgot their names, I guess they were called GNSS,GLONAS etc, I could be wrong
+ * so don't quote me anywhere).
+ * ALSO, full disclosure, I did not write this code, I picked it up from the internet from the guy that made the video of 
+ * "10Hz update rate on ublox gps". I did makes some changes but they are just for my convenience. All credit for this stuff goes to him.
+ */
+
 const unsigned char UBX_HEADER[] = { 0xB5, 0x62 };  //header of the incoming signal
 
 struct NAV_POSLLH    //structure in which all the data will be stored
@@ -79,7 +90,17 @@ bool processGPS()    //bool function to tell us whether all the data has come in
 }
 inline void updategps()  //make sure that you have while(!processGPS()){} before calling this if you are relying on an update from this function
 {
-    longitude=posllh.lon/10000000.0f;
-    latitude=posllh.lat/10000000.0f;
-    Hdop=posllh.hAcc/1000.0f;
+    longitude=float(posllh.lon)*0.0000001;
+    latitude=float(posllh.lat)*0.0000001;
+    Hdop=float(posllh.hAcc)*0.001;
 }
+
+void localizer() //function to figure out our original location. not inline because it is called only once
+{
+  if(processGPS())
+  {
+    updategps();
+    tick = true; // this tick is used to signify that new gps data has arrived. see the advantage of using global variables now?
+  }
+}
+
