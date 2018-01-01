@@ -38,13 +38,14 @@ inline void Compute_Steering_Distance()   //correction suggestions from gps
   
   //----------CORRECTIONS USING THE LOCALIZATION RESULTS------------
   ml=anglecalcy(globalX,destX,globalY,destY);  //angle of line connecting bot to destination w.r.t E-W axis(X axis). Look into math functions tab. 
-  if( mod(ml-mh)<=mod((360-ml)-mh) ) //figuring out which angle is smaller, clockwise one or the anti-clockwise one.
+
+  if( mod(ml-mh)<=mod(ml-mh-360) ) //figuring out which angle is smaller, clockwise one or the anti-clockwise one.
   {
     correction = ml-mh;                            
   }
-  if(mod(ml-mh)>mod((360-ml)-mh))
+  if(mod(ml-mh)>mod(ml-mh-360) )
   {
-    correction = (360-ml)-mh;
+    correction = ml-mh-360;
   }
   d=distancecalcy(globalY,destY,globalX,destX,0); //returns distance in meters. look into math_functions tab.
 }
