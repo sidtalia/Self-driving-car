@@ -1,15 +1,15 @@
 
-//every function is inline because there are so many functions that the overhead time of each function will add up and increase the control loop time significantly.  
-//and also because space isn't a big deal here(YET).
+#define CALIBERATION 0.00038        
+#define loopFreq 50  
 
 inline void location_Update()
 {
   //Ha is the Horizontal Acceleration.
   Ha=( (A[1]-(9.8*sin(pitch*0.01745)))*cos(pitch*0.01745) ); //the car could be going up an incline or going downhill
   Ha*=(depress(Ha,0.5));//suppressing small values of Ha to reduce the noise.
-  X+= (!accelRequired)*((cos(mh*0.01745)*(float(dy)/2000.0f)) + (sin(mh*0.01745)*(float(dx)/2000.0f))) + (accelRequired*V*dt*cos(mh*0.01745)); //steady state assumption applied for accelgyro. accelRequired variable
-  Y+= (!accelRequired)*((sin(mh*0.01745)*(float(dy)/2000.0f)) + (cos(mh*0.01745)*(float(dx)/2000.0f))) + (accelRequired*V*dt*sin(mh*0.01745));  // acquires value =1 when optical flow experiences buffer overflow or surfacequality is lower than 25 
-  V=float((float(dy)/2000.0f)*50)+(accelRequired*(V+Ha*dt));                                  //dy/dt because i trust optical flow a lot
+  X+= (!accelRequired)*((cos(mh*0.01745)*(float(dy)*CALIBERATION)) + (sin(mh*0.01745)*(float(dx)*CALIBERATION))) + (accelRequired*V*dt*cos(mh*0.01745)); //steady state assumption applied for accelgyro. accelRequired variable
+  Y+= (!accelRequired)*((sin(mh*0.01745)*(float(dy)*CALIBERATION)) + (cos(mh*0.01745)*(float(dx)*CALIBERATION))) + (accelRequired*V*dt*sin(mh*0.01745));  // acquires value =1 when optical flow experiences buffer overflow or surfacequality is lower than 25 
+  V=((float(dy)*CALIBERATION)*loopFreq)+(accelRequired*(V+Ha*dt));                                  //dy/dt because i trust optical flow a lot
 }
 
 
