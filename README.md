@@ -1,2 +1,2 @@
 # Self-driving-car
-waypoint following and obstacle avoidance 
+waypoint following (obstacle avoidance unit is being re-developed as of now).
