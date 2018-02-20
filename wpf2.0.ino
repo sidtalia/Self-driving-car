@@ -10,7 +10,7 @@
 /*NOTE: 
  * It would appear to you that a lot of the variables are global even though most would consider such a practice as unsafe. 
  * However on closer inspection, you will notice that the variables I have kept global are the ones that are shared between multiple functions.
- * This makes writing the functions etc easier for me, plus it reduces the function overhead as the variables are already in the working memory.
+ * This makes writing the functions easier for me, plus it reduces the function overhead as the variables are already in the working memory.
  * This also gives me a lot of freedom to use intermediate values from one function in another function(like accelerations, gyrations, etc) for filtering purposes.
  * It would be of some help if someone could tell me how i could make some variables read-only outside of a code block so that the system becomes a little more "secure"
  * without creating classes.
@@ -25,7 +25,7 @@
  *                       - global coordinates updated each cycle  
  *                       - math functions are in a separate tab 
  *                       - k(accel trust) was for some reason not being calculated, so added a statement for that
- * Kalman filter updated to handle gps and opflow instead of gps and imu.
+ * psuedo Kalman filter updated to handle gps and opflow instead of gps and imu.
  * i2c communication to slave arduinos added.function takes address of slave and the message array into which the message is stored. currently only for 2 pieces of information. Not in use right now
  * added optical flow code .  it's function is called in the localization tab before calling "callimu()". results from OpFlow are used in accelgyro tab 
  * magnetometer incorporated. function call is in accelgyro tab
@@ -51,7 +51,7 @@
 #include<Servo.h>
 
 Servo motor,steer;
-#define dt 0.0025
+#define dt 0.0025 //cycle time
 
 
 //--------------IMU STUFF-------------------------
@@ -62,11 +62,11 @@ uint8_t buf[6];
 float A[3],G[3],M[3],lastA[3],lastG[3];
 //413.97||764.10||16140.42||-134.85||94.52||162.61||
 
-float offsetA[3]={400,764,16176},offsetG[3]={-32,23,40},offsetM[3]={44174,33516,36478};//34816||40574||36478|
+float offsetA[3]={400,764,16176},offsetG[3]={-32,23,40},offsetM[3]={44174,33516,36478};//offsets for IMU
 float roll,pitch,yawRate;
-float magbuf[2]={0,0};
-float T[2];
-float Ha,V=0;
+float magbuf[2]={0,0};//buffer for magnetic strength values
+float T[2]; //tilt(roll and pitch estimates using gyro
+float Ha,V=0; //horizontal acceleration, velocity estimate
 //--------------IMU STUFF ENDS--------------------
 
 //--------------GPS STUFF-------------------------
@@ -75,7 +75,7 @@ float iLong,iLat,destLat,destLong;
 float destX,destY;
 bool tick=false;
 #define GPSBAUD 115200
-#define MAXVARIANCE 20//max hdop allowed during startup
+#define MAXVARIANCE 20//max hdop in meters allowed during startup
 //--------------GPS STUFF ENDS--------------------
 
 //--------------OPTICAL FLOW STUFF----------------
