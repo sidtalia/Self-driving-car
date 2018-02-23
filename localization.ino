@@ -16,14 +16,18 @@ void localization()    //correction suggestions from gps
   location_Update(); // look above this function. 585
   if(tick)//if new GPS data was received
   {
-    globalX = (longitude - iLong)*111692.84f; //get gps position w.r.t. origin
-    globalY = (latitude - iLat)*111692.84f;
-
+//    globalX = (longitude - iLong)*111692.84f; //get gps position w.r.t. origin
+//    globalY = (latitude - iLat)*111692.84f;
+    globalX = (longitude - lastLong)*111692.84f + lastX;
+    globalY = (latitude - lastLat)*111692.84f + lastY;
+    lastLong = longitude;
+    lastLat = latitude; 
+    
     globalX = gpsOpFlowKalman(globalX,Hdop,X,surfaceQuality); //run kalman filter on
     globalY = gpsOpFlowKalman(globalY,Hdop,Y,surfaceQuality); //gps coords and optical flow estimates. look into math_functions tab.
     
-    X = globalX; //update previous estimates  
-    Y = globalY; 
+    X = lastX = globalX; //update previous estimates  
+    Y = lastY = globalY; 
 
     tick = false; //make tick false so that it is known that the info from the gps is now old
   }
@@ -32,7 +36,7 @@ void localization()    //correction suggestions from gps
   globalY = Y; //because the angle and distance are calculated umy_sing these variables
   //----------LOCALIZATION ENDS-------------------------------------
 }//800us
-
+/*
 void Compute_Steering_Distance()
 { 
   //----------CORRECTIONS USING THE LOCALIZATION RESULTS------------
@@ -46,5 +50,5 @@ void Compute_Steering_Distance()
   {
     correction = ml-mh-360;
   }
-  d=distancecalcy(globalY,destY,globalX,destX,0); //returns distance in meters. look into math_functions tab.
 }//525us
+*/
