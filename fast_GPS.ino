@@ -88,14 +88,14 @@ bool processGPS()    //bool function to tell us whether all the data has come in
   }
   return false;
 }
-inline void updategps()  //make sure that you have while(!processGPS()){} before calling this if you are relying on an update from this function
+inline __attribute__((always_inline)) void updategps()  //make sure that you have while(!processGPS()){} before calling this if you are relying on an update from this function
 {
     longitude=float(posllh.lon)*0.0000001;
     latitude=float(posllh.lat)*0.0000001;
     Hdop=float(posllh.hAcc)*0.001;
 }
 
-inline void localizer() //function to figure out our original location. not inline because it is called only once
+inline __attribute__((always_inline)) void localizer() //function to figure out our original location. not inline because it is called only once
 {
   if(processGPS())
   {
