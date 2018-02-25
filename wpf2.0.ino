@@ -196,8 +196,8 @@ void setup()
   
   
   //-------------- IMU setup begins-----------------
-  Wire.begin();//initialize TWI communication
   TWBR=12;//prescaler set for 400KHz
+  Wire.begin();//initialize TWI communication
   accelgyro.initialize();
   while(!accelgyro.testConnection())
   {  
