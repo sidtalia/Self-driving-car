@@ -294,37 +294,33 @@ void loop()
 {
   now = micros();
   if(cycle==pow(2,0))
-  {
+  { 
     I2Cdev::writeByte(0x68,0x37,0x02); //ask MPU9150 to let me talk to the magnetometer.(XCL,XDA) 
-    compute_All();//1000us
+    compute_All();//1124us
     I2Cdev::writeByte(0x0C, 0x0A, 0x01); //enable the magnetometer
-    if((mh>20.0&&mh<160.0)||(mh>200.0&&mh<340.0)) //range of angles where the magnetometer is reliable against the external interference from the motor.
-    {
-      mh = 0.99*mh + 0.01*(tilt_Compensate(roll/57.3, pitch/57.3)); //tilt compensation takes angles in radians
-    }//435us
-    localization();//805
-    d=distancecalcy(globalY,destY,globalX,destX,0); //returns distance in meters. look into math_functions tab. 100us
-    t = get_T(V,d); //40us
-  }//2380us
+    localization();//663
+    d=distancecalcy(globalY,destY,globalX,destX,0); //returns distance in meters. look into math_functions tab. 70us
+    t = get_T(V,d); //40us   
+  }//2000us
 
   if(cycle==pow(2,1))
   {
-    compute_All(); //1000us
-    localization(); //805us
-    get_Intermediate_Points(mh,destSlope,globalX,destX,globalY,destY,d);//260us
-  }//2065us. some gap here
+    compute_All(); //1124us
+    localization(); //663us
+    get_Intermediate_Points(mh,destSlope,globalX,destX,globalY,destY,d);//248us
+  }//2095us. some gap here
   
   if(cycle==pow(2,2))
   {
-    compute_All(); //1000us
+    compute_All(); //1124us
     localization(); //805us
-    Curvature(globalX,globalY,int1[0],int1[1],int2[0],int2[1],destX,destY,t,MAX_ACCELERATION);//585us. the change in globalX can't be more than 5cm even at 20m/s
+    Curvature(globalX,globalY,int1[0],int1[1],int2[0],int2[1],destX,destY,t,MAX_ACCELERATION);//540us. the change in globalX can't be more than 5cm even at 20m/s
     //the function calculates the steering angle required and the max Velocity according to the max allowed lateral acceleration and yaw_Compensation
-  }//~2390us
+  }//~2380us
   
   if(cycle==pow(2,3))
   {
-    compute_All();//1000us
+    compute_All();//1124us
     I2Cdev::readBytes(0x0C, 0x03, 6, buf); //read the mag data
     m[1] = (((uint16_t)buf[0]) << 8) | buf[1]; // again, switching over X and Y axis readings because the mag has it's X aligned with accel's 
     m[0] = (((uint16_t)buf[2]) << 8) | buf[3]; // Y axis and vice-versa, which makes less sense to me. This is a personal preference thing and not mandatory
@@ -333,15 +329,25 @@ void loop()
     {
       M[i] = m[i];
       M[i] -= offsetM[i];
-    } //135us
-    localization();//805us
-  }//2465us
+    } //140us
+    localization();//663us
+  }//1987us
   //lots of free time for the next 3 cycles. lets do something with it in future!
   if(cycle==pow(2,4))
   {
-    compute_All(); //1000us
-    localization(); //805us  
-    if(!accelgyro.testConnection()) //12us to detect!
+    compute_All(); //1124us
+    localization(); //663us  
+    if((mh>20.0&&mh<160.0)||(mh>200.0&&mh<340.0)) //range of angles where the magnetometer is reliable against the external interference from the motor.
+    {
+      mh = 0.999*mh + 0.001*(tilt_Compensate(roll*0.01745, pitch*0.01745)); //tilt compensation takes angles in radians
+    }//643us
+  }//~2490us.
+  
+  if(cycle==pow(2,5)||cycle == pow(2,6))
+  {
+    compute_All(); //1124us
+    localization();//663us  
+    if(!accelgyro.testConnection()) 
     {
       connection = false;
     }
@@ -349,20 +355,14 @@ void loop()
     {
       connection = true;
     }
-  }
-  
-  if(cycle==pow(2,5)||cycle == pow(2,6))
-  {
-    compute_All(); //1000us
-    localization(); //805us  
-  }
+  }//2347us
   
   if(cycle==pow(2,7))
   {
-    compute_All(); //1000us
-    localization(); //805us
-    driver();
-  }//
+    compute_All(); //1124us
+    localization();//663us
+    driver();//140us
+  }//1987us
   
   cycle <<= 1;
   if(cycle==0)
