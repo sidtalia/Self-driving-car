@@ -20,7 +20,6 @@
 /* recent updates(latest first)-
  * bezier curve based trajectory planning added.
  * driver module has it's own separate tab
- * the function prototypes of separate tabs has been put into the main tab because the arduino IDE thinks i am writing in avr level and it wont let me define things in other tabs. 
  * usr module added 
  * miscellaneous changes- mh=90 initialization removed 
  *                       - global coordinates updated each cycle  
@@ -99,7 +98,7 @@ SPISettings spiSettings(2e6, MSBFIRST, SPI_MODE3);    // 2 MHz, mode 3
 int8_t dx,dy;
 uint8_t surfaceQuality;
 bool connection=false;
-//--------------OPTICLA FLOW STUFF ENDS-----------
+//--------------OPTICAL FLOW STUFF ENDS-----------
 
 //--------------ULTRASONIC STUFF------------------
 volatile unsigned long timer[4];
@@ -175,8 +174,6 @@ void setup()
   Serial.begin(GPSBAUD); // initialize UART communication
   //--------------MOTOR and STEERING initialization-------
   delay(2000);
-
-  //---------------MOTOR and STEERING initialized----------
   //-----------------OPTICAL FLOW Setup-----------------
   SPI.begin();
   // Set SS and reset pin as output
@@ -245,7 +242,7 @@ void setup()
       i--;
     }
   }
-  while(Hdop>10000000); //while HDOP>10
+  while(Hdop>10); //while HDOP>10
   lastLat = iLat;
   lastLong = iLong;
   //2/3 parking lot horizontal y/x
