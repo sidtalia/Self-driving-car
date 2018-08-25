@@ -42,7 +42,7 @@ The ardu rover uses a point and shoot method for waypoint following, i.e., it si
 
 In this project, I originally started out by copying what ardu-rover was doing but only to understand the basics of localization through sensor fusion and a little bit about control. I then incorporated trajectory planning using bezier curves. This allows the car to see the waypoints in a more "global" fashion rather than in the local fashion as is seen by the car in the ardu-rover. By seeing the points in a more global fashion, the car can calculate the appropriate trajectory that would allow the car to seamlessly travel through the waypoints. The trajectory planning also opens up the possibility of special manuevers like lane changing and parking.
 
-As of now, the project is under development and I would advise against copying it and running it for yourself( I mean you could but don't blame me if something goes wrong). What I intend to add in the future is:
+As of now, the project is under development and I would advise against copying it and running it for yourself( I mean you could but don't blame me if something goes wrong).
 
 # HOW IT WORKS (A layman explanation) : 
 in the void setup:
