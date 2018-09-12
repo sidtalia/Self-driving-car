@@ -1,4 +1,5 @@
 ## Self-driving-car (actually just a way point follower :P)  
+the project is no longer being maintained. I have switched over to STM32F103C8T6. The new project is over at Self driving car 2.0
 waypoint following (obstacle avoidance unit is being re-developed as of now). video link:https://youtu.be/PnjM10glXuw 
 
 This project is in essence supposed to be a lower level platform for developers to build on top of, something like an ardu rover of sorts but in my opinion better. 
