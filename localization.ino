@@ -57,6 +57,6 @@ void localization()    //correction suggestions from gps
   }//158us
 
   globalX = X; //transfer values of estimates to global values every cycle
-  globalY = Y; //because the angle and distance are calculated umy_sing these variables
+  globalY = Y; //because the angle and distance are calculated using these variables
   //----------LOCALIZATION ENDS-------------------------------------
 }//437us
