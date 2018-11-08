@@ -6,7 +6,7 @@ Test1 :https://youtu.be/PnjM10glXuw
 
 Test2 : https://www.youtube.com/watch?v=IqyNvaG0JE0
 
-(Refer to the image at the bottom of readme). The localisation is not vision based. it uses GPS, IMU and optical flow (ADNS3080 for localisation). The reason for using optical flow is that it gives much better resolution compared to wheel encoders.
+(Refer to the image at the bottom of readme). The localisation is not vision based. it uses GPS, IMU and optical flow (ADNS3080 for localisation). The reason for using optical flow is that it gives much better resolution compared to wheel encoders plus you can also measure sideways movement! 
 
 This project is in essence supposed to be a lower level platform for developers to build on top of, something like an ardu rover of sorts but in my opinion better. 
 
