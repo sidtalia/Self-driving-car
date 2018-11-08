@@ -26,8 +26,10 @@ In the setup():
 Once done with fitting everything in the casing/harness, Find the offsets for the IMU. This part is not too difficult. A file to do this will be uploaded very soon. If you're smart enough, you can figure out how to get the offsets on your own
 
 "driver module.ino":
-Calculate the top speed of your car. ESC's generally have a linear input/output curve unless tuned otherwise. Divide 500(assuming throttle/brake is 0 at pulse width 1500us) by the top speed to get the open loop gain for the speed control. Set the closed loop gain as half the open loop gain.
+Calculate the top speed of your car. (assuming a linear relation between speed and ESC input). Divide 500(assuming throttle/brake is 0 at pulse width 1500us) by the top speed to get the open loop gain for the speed control. Set the closed loop gain as half the open loop gain.
 Find the maximum steering angle. Steering angle can also be assumed to vary linearly. Divide 500 by maximum steering angle to obtain open loop gain for steering. Leave the rest as is.
+
+I think I haven't yet added the wheelbase setting. Since the project is dead I doubt if i actually would.
 
 
   
