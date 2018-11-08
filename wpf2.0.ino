@@ -18,13 +18,12 @@
  */
  
 /* recent updates(latest first)-
- *  not converting magnetometer readings to gauss anymore.
- *  gyro offsets calculated during setup. 2s delay removed during startup.
+ * not converting magnetometer readings to gauss anymore.
+ * gyro offsets calculated during setup. 2s delay removed during startup.
  * replaced TWBR=12 with Wire.setClock(800000) 
  * bezier curve based trajectory planning added.
  * driver module has it's own separate tab
- * the function prototypes of separate tabs has been put into the main tab because the arduino IDE thinks i am writing in avr level and it wont let me define things in other tabs. 
- * usr module added 
+ * ultrasonic rangefinder module added 
  * miscellaneous changes- mh=90 initialization removed 
  *                       - global coordinates updated each cycle  
  *                       - math functions are in a separate tab 
