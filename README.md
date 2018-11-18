@@ -1,5 +1,7 @@
 ## Self-driving-car (actually just a way point follower :P)  
-the project is no longer being maintained. I have switched over to STM32F103C8T6. The new project is over at Self-driving-car-STM-32.
+the project is no longer being maintained.
+I have switched over to STM32F103C8T6 ( https://github.com/naughtyStark/Self-driving-car-STM-32 ). 
+The new project is over at Self-driving-car-STM-32.
 (obstacle avoidance unit is being re-developed as of now). video link for this (old) version 
 
 Test1 :https://youtu.be/PnjM10glXuw 
