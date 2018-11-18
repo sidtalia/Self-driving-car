@@ -10,7 +10,7 @@ Test2 : https://www.youtube.com/watch?v=IqyNvaG0JE0
 
 (Refer to the image at the bottom of readme). The localisation is not vision based. it uses GPS, IMU and optical flow (ADNS3080 for localisation). The reason for using optical flow is that it gives much better resolution compared to wheel encoders plus you can also measure sideways movement! 
 
-This project is in essence supposed to be a lower level platform for developers to build on top of, something like an ardu rover of sorts but in my opinion better. 
+This project is in essence supposed to be a lower level platform for developers to build on top of, something like an ardu rover of sorts except that its not generic by any means, at least not yet.
 
 # HARDWARE : 
 
@@ -40,16 +40,17 @@ The motor has a steel casing around it to act as a magnetic short circuit to red
 # Motivation:
 The reason why it has been built on an arduino mini pro and not an ARM(or some other fancy) controller is :
 
-1)People that are new to robotics are gonna be more comfortable with arduino as compared to ARM(or some other fancy microcontroller), hence it would be easier for them to understand the code even if they are new to this field.
+1)People that are new to robotics are gonna be more comfortable with arduino as compared to pixhawk(or some other fancy microcontroller), hence it would be easier for them to understand the code even if they are new to this field.
 
 2)Arduino's are too cheap to bill.
 
-3)(this is a personal one). IF NASA CAN SEND A ROCKET TO THE MOON USING COMPUTATIONAL POWER LESS THAN THAT OF A HANDHELD CALCULATOR I CAN MAKE A SELF DRIVING (actually just a waypoint follower but self driving car is more catchy) CAR ON AN ARDUINO MINI PRO. 
+3)(rants). IF NASA CAN SEND A ROCKET TO THE MOON USING COMPUTATIONAL POWER LESS THAN THAT OF A HANDHELD CALCULATOR I CAN MAKE A SELF DRIVING (actually just a waypoint follower but self driving car is more catchy) CAR ON AN ARDUINO MINI PRO. 
 
-Why this is better than an ardu-rover (ya'll devs at APM, you do a great job. I got nothing but respect for ya'll. This is supposed to be a funny rant not a serious criciticism): 
+Why this is better than an ardu-rover (at that one single thing) (ya'll devs at APM, you do a great job. I got nothing but respect for ya'll): 
 The ardu rover uses a point and shoot method for waypoint following, i.e., it simply takes the angle between where the car's nose is pointing and where the next waypoint is as the error and corrects that error using a PID controller on the steering. This works fine if you only have 2 points in your mission, the starting point and the ending point. This method does not take into account the position of the waypoint after the current one. 
 
-In this project, I originally started out by copying what ardu-rover was doing but only to understand the basics of localization through sensor fusion and a little bit about control. I then incorporated trajectory planning using bezier curves. This allows the car to see the waypoints in a more "global" fashion rather than in the local fashion as is seen by the car in the ardu-rover. By seeing the points in a more global fashion, the car can calculate the appropriate trajectory that would allow the car to seamlessly travel through the waypoints. The trajectory planning also opens up the possibility of special manuevers like lane changing and parking.
+Another reason why I did not simply clone the ArduRover project and make the modifications according to my convenience is because ArduRover is a project developed by professionals. I am not a professional. I had just started out with my undergraduate studies when I started this project. If you clone the ArduRover project, you don't have to worry too much about the inner workings of the EKF, the AHRS, GCS, Sensor abstraction etc. which saves a lot of time (and I have used the ardupilot project where I did not have a lot of time, although none of them are hosted on github) but you don't get to learn how they really work. I mean if you look at the EKF code in ArduRover its a bunch of matrix multiplications (last I checked was in 2016) that is only instantly comprehensible to someone who knows how an EKF works (i.e. not me). Therefore I can't claim that I understand how an EKF works (which is the most important thing as a student!). 
+In this project I slowly progressed from complimentary towards psuedo kalman filters (psuedo because they are like kalman filters but missing one step that isn't exactly required in this particular use case) and progressed from a PID control for navigation (no path planning) to a motion predictive control (MPC) that utilizes an open and closed loop control at the lower level for controlling steering and throttle. 
 
 As of now, the project is under development(no more as of 22nd July 2018) and I would advise against copying it and running it for yourself( I mean you could but don't blame me if something goes wrong). (you can copy it but I have something better int the works so maybe copy that instead.)
 
