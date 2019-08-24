@@ -44,18 +44,15 @@ The reason why it has been built on an arduino mini pro and not an ARM(or some o
 
 2)Arduino's are too cheap to bill.
 
-3)(rants). IF NASA CAN SEND A ROCKET TO THE MOON USING COMPUTATIONAL POWER LESS THAN THAT OF A HANDHELD CALCULATOR I CAN MAKE A SELF DRIVING (actually just a waypoint follower but self driving car is more catchy) CAR ON AN ARDUINO MINI PRO. 
+3)If NASA can send a rocket to the moon with computational power less than that of a handheld calculator I can make a self driving car on a microcontroller.
 
-Why this is better than an ardu-rover (at that one single thing) (ya'll devs at APM, you do a great job. I got nothing but respect for ya'll): 
-
-(Note, this is no longer valid, Ardurover uses an L1 controller to make sure the rover follows the line joining the 2 waypoints which is still somewhat just as inefficient)
-
-The ardu rover uses a point and shoot method for waypoint following, i.e., it simply takes the angle between where the car's nose is pointing and where the next waypoint is as the error and corrects that error using a PID controller on the steering. This works fine if you only have 2 points in your mission, the starting point and the ending point. This method does not take into account the position of the waypoint after the current one. 
+4) The project was inspired by the ardurover project. However, ardurover uses a point and shoot method for waypoint following, i.e., it simply takes the angle between where the car's nose is pointing and where the next waypoint is as the error and corrects that error using a PID controller on the steering. This works fine if you only have 2 points in your mission, the starting point and the ending point. This method does not take into account the position of the waypoint after the current one. 
 
 Another reason why I did not simply clone the ArduRover project and make the modifications according to my convenience is because ArduRover is a project developed by professionals. I am not a professional. I had just started out with my undergraduate studies when I started this project. If you clone the ArduRover project, you don't have to worry too much about the inner workings of the EKF, the AHRS, GCS, Sensor abstraction etc. which saves a lot of time (and I have used the ardupilot project where I did not have a lot of time) but you don't get to learn how they really work. I mean if you look at the EKF code in ArduRover its a bunch of matrix multiplications (last I checked was in 2016) that is only instantly comprehensible to someone who knows how an EKF works (i.e. not me). Therefore I can't claim that I understand how an EKF works (which is the most important thing as a student!). 
-In this project I slowly progressed from complimentary towards psuedo kalman filters (psuedo because they are like kalman filters but missing one step that isn't exactly required in this particular use case) and progressed from a PID control for navigation with no path planning to navigation with path planning based control that utilizes an open and closed loop control at the lower level for controlling steering and throttle. 
 
-As of now, the project is no longer under development as of 22nd July 2018 and I would advise against copying it and running it for yourself( I mean you could but don't blame me if something goes wrong). (you can copy it but I have something better int the works so maybe copy that instead.)
+In this project I slowly progressed from complimentary towards psuedo kalman filters (psuedo because they are like kalman filters but missing one step that isn't exactly required in this particular use case) and progressed from a PID control for navigation to Curvature based navigation that utilizes an open and closed loop control at the lower level for controlling steering and throttle. 
+
+This iteration is no longer under development as of 22nd July 2018 and I would advise against copying it and running it for yourself( I mean you could but don't blame me if something goes wrong). (you can copy it but I have something better int the works so maybe copy that instead). A new iteration will be released soon.
 
 # EXAMPLE CASE:
 here is an example of what the controller "sees" 
