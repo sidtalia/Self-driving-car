@@ -9,7 +9,7 @@ The first version was built on a single Arduino Uno, the second on a pro-mini an
 This project is supposed to act as a lower level controller for higher level agents. The car can be given a point (X,Y,theta) relative to it's current location. The car can also reactively avoid obstacles if ultrasonic sensors are present in the build (this will be replaced by lidars in the future). Ideally, the higher level agent should give waypoints that do not force the car to go through an obstacle (that's kind of the point of having a higher level agent). The lower level controller takes care of figuring out the throttle and steering control for getting to a particular point.
 
 ### Odometry and localization
-The localization is supposed to happen in open outdoor environments using a filtered GPS data. I make the assumption that there is no exploitable feature in the environment. This is mostly because a system dependent on discernable features in the environment would not work as well in environments where there are none. The user can always add their own way of localization and simply send the location data to the low level controller (the support for this will be incorporated soon). Most projects like these should be tested in wide open spaces for the sake of safety and so GPS based localization made the most sense as being the most "generic" way of localization.
+The localization is supposed to happen in open outdoor environments using a filtered GPS data. I make the assumption that there is no exploitable feature in the environment. This is mostly because a system dependent on discernable features in the environment would not work as well in environments where there are none. The user can always add their own way of localization and simply send the location data to the low level controller (the support for this will be incorporated soon). Most projects like these should be tested in wide open spaces for the sake of safety and so GPS based localization made the most sense as it is the most "generic" way of localization.
 
 ![image](https://user-images.githubusercontent.com/24889667/64061985-13280680-cbff-11e9-98cb-fa1b4d33b29a.png)
 
@@ -17,7 +17,7 @@ The odometry is obtained by fusing data from GPS, optical flow, IMU+compass and 
 
 
 ### Control
-The control is based on bezier curve(3rd order) based trajectory generation. At the moment, the generated trajectory is not "optimal". There is however, support for pre-emptive braking. 
+The control is based on bezier curve(3rd order) based trajectory generation. At the moment, the generated trajectory is not an optimized one. There is however, support for pre-emptive braking (more on that later).
 
 The speed control uses an asymmetric non-linear controller. Big words? Here's a simpler explanation:
 1) The car does not speed up and slow down in the same way; the response of the brakes is different from the response of the throttle, therefore there is asymmetry in the process being controlled.
@@ -26,11 +26,20 @@ The speed control uses an asymmetric non-linear controller. Big words? Here's a 
 This means that in order to control the speed, I'd need a controller that compensates for both these problems and hence the big-words.
 The steering control is an open + closed loop progressive P controller (progressive as in the gain increases with the error, like in a progressive spring). The combination of these 2 controllers allows the car to remain under control for the most part even without preemptive braking.
 
-The control system can adapt to the surface if it detects that the car is sliding when turning, but if it does enter a slide, it can handle itself ;)
+The control system can update the friction coefficient of the surface if it detects that the car is sliding when turning, and if it does enter a slide, it can handle itself ;)
 ![GifMaker_20190831155907193](https://user-images.githubusercontent.com/24889667/64062747-533fb700-cc08-11e9-962e-d4252096618a.gif)
 
-The system is also capable of preemptive braking, i.e., slowing down before the turn instead of slowing down while turning (as done in racing).
+The system is also capable of preemptive braking, i.e., slowing down before the turn(as done in racing) instead of slowing down while turning.
 Video link for preemptive braking :  https://www.youtube.com/watch?v=Ko5H_G4eCLo 
+#### how preemptive braking is implemented: 
+The car has a trajectory, it then finds the point of maximum curvature along that trajectory (upto the next checkpoint or waypoint) and determines maximum allowable speed for that curvature with some margin. The car then determines whether it should start slowing down for that point or not, on the basis of the deceleration required to hit that speed at that point. A more detailed discussion was done here (scroll down to the 5th last post which includes hand written notes): https://github.com/a1k0n/cycloid/pull/3
+
+For my project, since the bezier curve trajectory is dynamic, the location of the maximas can change and so I would need to find them in real time. However, the problem with this is that analytically finding the maximas is impossible (requires solving for the roots of a fifth order polynomial) and finding them numerically would take too much time for a reasonable level of error (+/- 1% )
+![image](https://user-images.githubusercontent.com/24889667/64473489-3a458180-d185-11e9-83cf-b4f9081d4508.png)
+This evaluation takes about 3 milliseconds on my 3.6GHz 64 bit laptop. The loop time of the entire code has to be less than 2.5 milliseconds on a 128MHz 32 bit microcontroller, so this appears to be a really bad approach
+
+To deal with this inconvenience, I came up with a "magic formula" that generates a rough guess which is within 10% of the true value and then I just use 2 iterations of the newton-rhapson method to zone in on the true value. This gets me the result (both maximas) in about 400 microseconds on the microcontroller. Furthermore, the time complexity of this process is equal to the time complexity of newton raphson method which is in the log(n) family.
+
 
 ### Ground control system and V2V communications:
 The previous iterations did not have a GCS. This made debugging extremely hard as there wasn't an option of data recording or viewing the internal state of the controller in real time. The GCS in this work has the bare minimum features needed for debugging and is not on par with GCS like Missionplanner or even Qgroundcontrol, however, it gets the job done. The GCS allows me to record data that I could use for debugging as well as for finding flaws in the system. It can plot the position data from the car in real time.
