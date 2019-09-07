@@ -1,5 +1,5 @@
-## Self-driving-car (actually just a way point follower :P)  
-the project is no longer being maintained.
+## Self-driving-car (actually just a way point follower)  
+This project is no longer being maintained.
 I have switched over to STM32F103C8T6 (Project is currently private, will be made public soon). 
 (obstacle avoidance unit is being re-developed as of now). video link for this (old) version 
 
@@ -7,7 +7,7 @@ Test1 :https://youtu.be/PnjM10glXuw
 
 Test2 : https://www.youtube.com/watch?v=IqyNvaG0JE0
 
-(Refer to the image at the bottom of readme). The localisation is not vision based. it uses GPS, IMU and optical flow (ADNS3080 for localisation). The reason for using optical flow is that it gives much better resolution compared to wheel encoders plus you can also measure sideways movement! 
+(Refer to the EXAMPLE section). The localisation is not vision based. it uses GPS, IMU and optical flow (ADNS3080) for localisation. The reason for using optical flow is that it gives much better resolution compared to wheel encoders plus you can also measure sideways movement! 
 The system can function even if the gps and optical flow are only intermittently available once the car has an initial fix. In test 2, (if I remember correctly) the gps wires were removed.
 
 This project is in essence supposed to be a lower level platform for developers to build on top of, something like an ardu rover of sorts except that its not generic by any means, at least not yet.
@@ -38,19 +38,19 @@ The motor has a steel casing around it to act as a magnetic short circuit to red
 
 
 # Motivation:
-The reason why it has been built on an arduino mini pro and not an ARM(or some other fancy) controller is :
+The reason why it has been built on an arduino mini pro and not on an microprocessor or a pixhawk is :
 
-1)People that are new to robotics are gonna be more comfortable with arduino as compared to pixhawk(or some other fancy microcontroller), hence it would be easier for them to understand the code even if they are new to this field.
+1)People that are new to robotics are going to be more comfortable with arduino as compared to pixhawk(or some other fancy microcontroller), hence it would be easier for them to understand the code even if they are new to this field. While it is possible to interface microprocessors like raspberry pi with sensors, these processors do not provide direct hardware control that you get with a microcontroller. Plus, the communication within subsystems usually has a delay (TCP-IP overheads) which isn't there in a microcontroller, allowing for very high rate communication (2-3KHz).
 
 2)Arduino's are too cheap to bill.
 
-3)If NASA can send a rocket to the moon with computational power less than that of a handheld calculator I can make a self driving car on a microcontroller.
+3)If NASA can send a rocket to the moon with computational power less than that of a modern wristwatch I can make a self driving car on a microcontroller.
 
 4)The project was inspired by the ardurover project. However, ardurover uses a point and shoot method for waypoint following, i.e., it simply takes the angle between where the car's nose is pointing and where the next waypoint is as the error and corrects that error using a PID controller on the steering. This works fine if you only have 2 points in your mission, the starting point and the ending point. This method does not take into account the position of the waypoint after the current one. 
 
-Another reason why I did not simply clone the ArduRover project and make the modifications according to my convenience is because ArduRover is a project developed by professionals. I am not a professional. I had just started out with my undergraduate studies when I started this project. If you clone the ArduRover project, you don't have to worry too much about the inner workings of the EKF, the AHRS, GCS, Sensor abstraction etc. which saves a lot of time (and I have used the ardupilot project where I did not have a lot of time) but you don't get to learn how they really work. I mean if you look at the EKF code in ArduRover its a bunch of matrix multiplications (last I checked was in 2016) that is only instantly comprehensible to someone who knows how an EKF works (i.e. not me). Therefore I can't claim that I understand how an EKF works (which is the most important thing as a student!). 
+Another reason why I did not simply clone the ArduRover project and make the modifications according to my convenience is because ArduRover is a project developed by professionals. I am not a professional. I had just started out with my undergraduate studies when I started this project. If you clone the ArduRover project, you don't have to worry too much about the inner workings of the EKF, the AHRS, GCS, Sensor abstraction etc. which saves a lot of time (and I have used the ardupilot project where I did not have a lot of time) but you don't get to learn how it really works. I mean if you look at the EKF code in ArduRover its a bunch of matrix multiplications (last I checked was in 2016) that is only instantly comprehensible to someone who knows how an EKF works (i.e. not me). Therefore I can't claim that I understand how it works (which is one of the most important things as a student!). 
 
-In this project I slowly progressed from complimentary towards psuedo kalman filters (psuedo because they are like kalman filters but missing one step that isn't exactly required in this particular use case) and progressed from a PID control for navigation to Curvature based navigation that utilizes an open and closed loop control at the lower level for controlling steering and throttle. 
+In this project I slowly progressed from complimentary towards psuedo kalman filter (psuedo because they are like kalman filters but missing one step that isn't exactly required in this particular use case) and progressed from a PID control for navigation to Curvature based navigation that utilizes an open and closed loop control at the lower level for controlling steering and throttle. 
 
 This iteration is no longer under development as of 22nd July 2018 and I would advise against copying it and running it for yourself( I mean you could but don't blame me if something goes wrong). (you can copy it but I have something better int the works so maybe copy that instead). A new iteration will be released soon.
 
@@ -62,7 +62,7 @@ The white circles represent the waypoints that the user (me) provide to the ardu
 at the beginning of each cycle major cycle, the arduino calculates where the car will be by the end of the next major cycle. Using this we can back calculate the parameter 't' for the bezier curve(taken as the ratio of (distance to the point at the end of next major cycle)/total distance to next waypoint
 The red curve is the calculated trajectory(the arduino doesn't exactly calculate the trajectory, it directly jumps to the ROC at each point, The red trajectory drawn here(done in c++) is just to help the reader understand what is going on inside the arduino). The yellow curves represent the corresponding steering angle at every point.
 
-To be clear, the arduino does not produce these images(that would be a bit too computationally expensive)! This image was generated using a c++ program that ran on a laptop and is only for the sake of explanation. The arduino only knows of the coordinates of the waypoints. No data is dumped on to the arduino about the appropriate trajectory. The arduino finds the trajectory on the basis of it's current position, heading and the target waypoint, heading in real time, i.e., the trajectory is not pre-calculated. This means that if by chance the car was to go off-track a bit(due to loss of grip for whatever reason), it would still be following an optimum trajectory(Well it's not optimum right now but it will be optimum in the future iterations when i shift this project to something that has a clock speed of more than 16MHz).
+To be clear, the arduino does not produce these images(that would be a bit too computationally expensive!) This image was generated using a c++ program that ran on a laptop and is only for the sake of explanation. The arduino only knows of the coordinates of the waypoints. No data is dumped on to the arduino about the appropriate trajectory. The arduino finds the trajectory on the basis of it's current position, heading and the target waypoint, heading in real time, i.e., the trajectory is not pre-calculated. This means that if by chance the car was to go off-track a bit(due to loss of grip for whatever reason), it would still be following an optimum trajectory(Well it's not optimum right now but it will be optimum in the future iterations when i shift this project to something that has a clock speed of more than 16MHz).
 
 # HOW IT WORKS (A layman explanation) : 
 in the void setup:
