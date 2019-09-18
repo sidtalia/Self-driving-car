@@ -25,6 +25,8 @@ The speed control uses an asymmetric non-linear controller. Big words? Here's a 
 1) The car does not speed up and slow down in the same way; the response of the brakes is different from the response of the throttle, therefore there is asymmetry in the process being controlled.
 2) The car does not speed up by the same amount for the same amount of change in throttle at different speeds, hence there is a non-linearity in the process being controlled.
 
+(Note: I know that a system with a non-linear response is also by default asymmetric in response, but as I have specified above, the system is asymmetric beyond the general understanding of what it means to be asymmetric. The throttle controls the power to the wheels while the brake controls the force, in essence the system controls 2 completely different variables, leading to an asymmetric response.)
+
 This means that in order to control the speed, I'd need a controller that compensates for both these problems and hence the big-words.
 The steering control is an open + closed loop progressive P controller (progressive as in the gain increases with the error, like in a progressive spring). The combination of these 2 controllers allows the car to remain under control for the most part even without preemptive braking.
 
