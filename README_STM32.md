@@ -1,4 +1,4 @@
-# Self-driving-car-STM-32
+# Self-driving-car-STM-32 (just the readme. the project is currently private).
 This project is the third iteration of my attempt at a mini self-driving car. It started as an imitation of the ArduRover project without all the fancy GUI. I started doing this practically on a dare, but quickly realized I absolutely enjoyed the point where cars met robotics. Personally, I am a petrolhead, but I also love making things work autonomously and this project feels like the perfect spot in the middle.
 ![image](https://user-images.githubusercontent.com/24889667/64060910-eec52d80-cbf0-11e9-99f2-20f1574e10d9.png)
 The first, second and third (current iteration). The first one had the connections hot-glued instead of soldered (yes). It has a come a long way since then.
